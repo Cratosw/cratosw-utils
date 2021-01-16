@@ -19,9 +19,12 @@
     "outDir": "./lib",
     "esModuleInterop": true,
     "moduleResolution": "node",
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "typeRoots": [
+      "typings/index.d.ts"
+    ]
   },
   "include": [
     "src"
-  ]
+, "global.d.ts", "typings"  ]
 }

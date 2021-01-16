@@ -1,5 +1,9 @@
-const fabric = require('@yueqing/lint');
-
 module.exports = {
-  ...fabric.prettier,
-}
+  singleQuote: true,
+  trailingComma: 'all',
+  proseWrap: 'never',
+  endOfLine: 'lf',
+  semi: false,
+  jsxBracketSameLine: false,
+  arrowParens: 'avoid',
+};
