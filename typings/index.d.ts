@@ -18,3 +18,4 @@ declare global {
     removeRange(items: T[]): void
   }
 }
+
