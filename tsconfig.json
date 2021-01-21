@@ -2,6 +2,7 @@
   "compilerOptions": {
     /* 基础配置 */
     "target": "esnext",
+    "module": "esnext",
     "lib": [
       "dom",
       "esnext"
@@ -9,11 +10,9 @@
     "removeComments": false,
     "declaration": true,
     "sourceMap": true,
-
     /* 强类型检查配置 */
     "strict": true,
     "noImplicitAny": false,
-
     /* 模块分析配置 */
     "baseUrl": ".",
     "outDir": "./lib",
@@ -24,7 +23,14 @@
       "typings/index.d.ts"
     ]
   },
+  "exclude": [
+    ".babelrc"
+  ],
   "include": [
-    "src"
-, "global.d.ts", "typings"  ]
+    "src",
+    "global.d.ts",
+    "typings",
+    "**/*.ts",
+    "**/*.js"
+  ]
 }
