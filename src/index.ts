@@ -1,2 +1,3 @@
 export * from './type'
-export * from './Cratosw'
+export * as cratosw from './Cratosw'
+export * as color from './Color'

@@ -18,10 +18,7 @@
     "outDir": "./lib",
     "esModuleInterop": true,
     "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "typeRoots": [
-      "typings/index.d.ts"
-    ]
+    "resolveJsonModule": true
   },
   "exclude": [
     ".babelrc"

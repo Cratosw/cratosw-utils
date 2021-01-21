@@ -48,6 +48,7 @@ module.exports = {
     'no-restricted-globals': 0,
     'no-shadow': 'off',
     '@typescript-eslint/no-shadow': 0,
+    'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
     '@typescript-eslint/no-unused-vars': 0,
     // 禁止循环引用
     'import/no-cycle': 2,
