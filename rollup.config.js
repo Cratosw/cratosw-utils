@@ -1,35 +1,34 @@
-/* eslint-disable import/no-extraneous-dependencies */
-import path from 'path'
-import { RollupOptions } from 'rollup'
-import rollupTypescript from 'rollup-plugin-typescript2'
-import babel from 'rollup-plugin-babel'
-import resolve from 'rollup-plugin-node-resolve'
-import commonjs from 'rollup-plugin-commonjs'
-import { eslint } from 'rollup-plugin-eslint'
-import { DEFAULT_EXTENSIONS } from '@babel/core'
-
-import pkg from './package.json'
-
-const paths = {
-  input: path.join(__dirname, '/src/index.ts'),
-  output: path.join(__dirname, '/lib'),
-}
+const path = require('path')
+const { RollupOptions } = require('rollup')
+const rollupTypescript = require('rollup-plugin-typescript2')
+const babel = require('rollup-plugin-babel')
+const resolve = require('rollup-plugin-node-resolve')
+const commonjs = require('rollup-plugin-commonjs')
+const { eslint } = require('rollup-plugin-eslint')
+const { DEFAULT_EXTENSIONS } = require('@babel/core')
+const pkg = require('./package.json')
 
 // rollup 配置项
-const rollupConfig: RollupOptions = {
-  input: paths.input,
+module.exports = {
+  input: path.join(__dirname, '/src/index.ts'),
   output: [
     // 输出 commonjs 规范的代码
     {
-      file: path.join(paths.output, 'index.js'),
+      file: path.join(path.join(__dirname, '/lib'), 'index.js'),
       format: 'cjs',
-      name: pkg.name,
+      name: 'CratoswUtil',
     },
     // 输出 es 规范的代码
     {
-      file: path.join(paths.output, 'index.esm.js'),
+      file: path.join(path.join(__dirname, '/lib'), 'index.esm.js'),
       format: 'es',
-      name: pkg.name,
+      name: 'CratoswUtil',
+    },
+    {
+      file: path.join(path.join(__dirname, '/lib'), 'index.umd.js'),
+      format: 'umd',
+      name: 'CratoswUtil',
+      sourcemap: false,
     },
   ],
   external: Object.keys(pkg.Pedependencies || {}).concat(), // 指出应将哪些模块视为外部模块，如 Peer dependencies 中的依赖
@@ -63,5 +62,3 @@ const rollupConfig: RollupOptions = {
     }),
   ],
 }
-
-export default rollupConfig

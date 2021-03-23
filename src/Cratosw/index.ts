@@ -13,7 +13,7 @@ function createInstance(): CratoswInstance {
 }
 // 这里获取到的Cratosw实例就是在createInstance方法中创建的instance实例，类型为CratoswInstance
 const cratosw = createInstance()
-export default cratosw
+export { cratosw }
 
 // 同时从入口文件导出Cratosw中的类型定义
 export * from './types'

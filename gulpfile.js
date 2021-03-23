@@ -1,25 +1,17 @@
-import { series } from 'gulp'
-import path from 'path'
-import fse from 'fs-extra'
-import chalk from 'chalk'
-import { rollup } from 'rollup'
-import {
-  Extractor,
-  ExtractorConfig,
-  ExtractorResult,
-} from '@microsoft/api-extractor'
-import conventionalChangelog from 'conventional-changelog'
-import rollupConfig from './rollup.config'
-
-interface TaskFunc {
-  (cb: Function): void
-}
+const path = require('path')
+const { series } = require('gulp')
+const fse = require('fs-extra')
+const chalk = require('chalk')
+const { rollup } = require('rollup')
+const { Extractor, ExtractorConfig } = require('@microsoft/api-extractor')
+const conventionalChangelog = require('conventional-changelog')
+const rollupConfig = require('./rollup.config')
 
 const log = {
-  progress: (text: string) => {
+  progress: text => {
     console.log(chalk.green(text))
   },
-  error: (text: string) => {
+  error: text => {
     console.log(chalk.red(text))
   },
 }
@@ -30,14 +22,14 @@ const paths = {
 }
 
 // 删除 lib 文件
-const clearLibFile: TaskFunc = async cb => {
+const clearLibFile = async cb => {
   fse.removeSync(paths.lib)
   log.progress('Deleted lib file')
   cb()
 }
 
 // rollup 打包
-const buildByRollup: TaskFunc = async cb => {
+const buildByRollup = async cb => {
   const inputOptions = {
     input: rollupConfig.input,
     external: rollupConfig.external,
@@ -57,19 +49,14 @@ const buildByRollup: TaskFunc = async cb => {
 }
 
 // api-extractor 整理 .d.ts 文件
-const apiExtractorGenerate: TaskFunc = async cb => {
-  const apiExtractorJsonPath: string = path.join(
-    __dirname,
-    './api-extractor.json',
-  )
+const apiExtractorGenerate = async cb => {
+  const apiExtractorJsonPath = path.join(__dirname, './api-extractor.json')
   // 加载并解析 api-extractor.json 文件
-  const extractorConfig: ExtractorConfig = await ExtractorConfig.loadFileAndPrepare(
+  const extractorConfig = await ExtractorConfig.loadFileAndPrepare(
     apiExtractorJsonPath,
   )
   // 判断是否存在 index.d.ts 文件，这里必须异步先访问一边，不然后面找不到会报错
-  const isExist: boolean = await fse.pathExists(
-    extractorConfig.mainEntryPointFilePath,
-  )
+  const isExist = await fse.pathExists(extractorConfig.mainEntryPointFilePath)
 
   if (!isExist) {
     log.error('API Extractor not find index.d.ts')
@@ -77,18 +64,15 @@ const apiExtractorGenerate: TaskFunc = async cb => {
   }
 
   // 调用 API
-  const extractorResult: ExtractorResult = await Extractor.invoke(
-    extractorConfig,
-    {
-      localBuild: true,
-      // 在输出中显示信息
-      showVerboseMessages: true,
-    },
-  )
+  const extractorResult = await Extractor.invoke(extractorConfig, {
+    localBuild: true,
+    // 在输出中显示信息
+    showVerboseMessages: true,
+  })
 
   if (extractorResult.succeeded) {
     // 删除多余的 .d.ts 文件
-    const libFiles: string[] = await fse.readdir(paths.lib)
+    const libFiles = await fse.readdir(paths.lib)
     libFiles.forEach(async file => {
       if (file.endsWith('.d.ts') && !file.includes('index')) {
         await fse.remove(path.join(paths.lib, file))
@@ -104,7 +88,7 @@ const apiExtractorGenerate: TaskFunc = async cb => {
   }
 }
 
-const complete: TaskFunc = cb => {
+const complete = cb => {
   log.progress('---- end ----')
   cb()
 }
@@ -114,16 +98,16 @@ const complete: TaskFunc = cb => {
 // 2. rollup 打包
 // 3. api-extractor 生成统一的声明文件, 删除多余的声明文件
 // 4. 完成
-export const build = series(
+const build = series(
   clearLibFile,
   buildByRollup,
-  apiExtractorGenerate,
+  // apiExtractorGenerate,
   complete,
 )
 
 // 自定义生成 changelog
-export const changelog: TaskFunc = async cb => {
-  const changelogPath: string = path.join(paths.root, 'CHANGELOG.md')
+const changelog = async cb => {
+  const changelogPath = path.join(paths.root, 'CHANGELOG.md')
   // 对命令 conventional-changelog -p angular -i CHANGELOG.md -w -r 0
   const changelogPipe = await conventionalChangelog({
     preset: 'angular',
@@ -141,4 +125,8 @@ export const changelog: TaskFunc = async cb => {
     await fse.createWriteStream(changelogPath).write(resultArray.join(''))
     cb()
   })
+}
+module.exports = {
+  changelog,
+  build,
 }

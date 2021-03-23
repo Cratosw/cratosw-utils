@@ -11,7 +11,6 @@ module.exports = {
     'airbnb-typescript',
     'airbnb/hooks',
     'prettier',
-    // 'prettier/react',
     'prettier/@typescript-eslint',
   ],
   plugins: [
@@ -20,7 +19,6 @@ module.exports = {
     'eslint-comments',
     'jest',
     'unicorn',
-    'react-hooks',
   ],
   env: {
     browser: true,
